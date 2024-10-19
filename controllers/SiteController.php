@@ -137,8 +137,8 @@ class SiteController extends Controller
     {
         $model = new RegisterForm();
         
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
-            $user = $model->userRegister();
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->userRegister()) {
+            $this->goBack();
         }
 
         return $this->render('register', [

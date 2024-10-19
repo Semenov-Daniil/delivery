@@ -24,9 +24,6 @@ class RegisterForm extends Model
     public string $password_repeat = '';
     public bool $rule = false;
 
-    private $_user = false;
-
-
     /**
      * @return array the validation rules.
      */
@@ -35,10 +32,16 @@ class RegisterForm extends Model
         return [
             [['name', 'surname', 'login', 'email', 'phone', 'password', 'password_repeat'], 'required'],
             [['name', 'surname', 'patronymic', 'login', 'email', 'phone', 'password', 'password_repeat'], 'string', 'max' => 255],
+            [['name', 'surname', 'patronymic'], 'match', 'pattern' => '/^[А-Яа-яёЁ\s\-]+$/u', 'message' => 'Только кириллица, пробел, тире.'],
+            [['login'], 'match', 'pattern' => '/^[A-Za-z0-9\-]+$/', 'message' => 'Только латиница, цифры, тире.'],
+            [['password'], 'string', 'max' => 255, 'min' => 6],
+            [['password'], 'match', 'pattern' => '/^[A-Za-z0-9]+$/', 'message' => 'Только латиница, цифры, тире.'],
             ['password_repeat', 'compare', 'compareAttribute' => 'password'],
             ['email', 'email'],
+            ['phone', 'match', 'pattern' => '/^\+7\([\d]{3}\)\-[\d]{3}(\-[\d]{2}){2}$/', 'message' => 'Телефон должен быть формата: +7(XXX)-XXX-XX-XX'],
+            [['login', 'email'], 'unique', 'targetClass' => User::class],
             [['name', 'surname', 'patronymic', 'login', 'email', 'phone', 'password', 'password_repeat'], 'trim'],
-            ['rule', 'required', 'requiredValue' => '1', 'message' => 'Нужно подтверждение согласия на обработку персональных данных.'],
+            ['rule', 'required', 'requiredValue' => true, 'message' => 'Нужно подтверждение согласия на обработку персональных данных.'],
         ];
     }
 
@@ -60,7 +63,7 @@ class RegisterForm extends Model
         ];
     }
 
-    public function userRegister(): object|false
+    public function userRegister()
     {
         if ($this->validate()) {
             $user = new User();
@@ -71,13 +74,13 @@ class RegisterForm extends Model
             $user->password = Yii::$app->security->generatePasswordHash($user->password);
             $user->role_id = Role::getRoleId('user');
 
-            if (!$user->save()) {
-                VarDumper::dump($user->errors, 10, true);die;
+            if ($user->save()) {
+                return Yii::$app->user->login($user);
             }
-        } else {
-            VarDumper::dump($this->errors, 10, true);die;
+
+            $this->addErrors($user->errors);
         }
 
-        return $user ?? false;
+        return false;
     }
 }
