@@ -25,6 +25,11 @@ use Yii;
 class Product extends \yii\db\ActiveRecord
 {
     /**
+     * @var UploadedFile
+     */
+    public $imageFile;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -38,12 +43,13 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'photo', 'price', 'shelf_life', 'description', 'category_id'], 'required'],
+            [['title', 'price', 'shelf_life', 'description', 'category_id'], 'required'],
             [['price', 'weight', 'kilocalories'], 'number'],
             [['count', 'like', 'dislike', 'category_id'], 'integer'],
             [['description'], 'string'],
             [['title', 'photo', 'shelf_life'], 'string', 'max' => 255],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
         ];
     }
 
@@ -54,17 +60,18 @@ class Product extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
-            'photo' => 'Photo',
-            'price' => 'Price',
-            'count' => 'Count',
+            'title' => 'Название',
+            'photo' => 'Фотография',
+            'price' => 'Цена',
+            'count' => 'Кол-во',
             'like' => 'Like',
             'dislike' => 'Dislike',
-            'weight' => 'Weight',
-            'kilocalories' => 'Kilocalories',
-            'shelf_life' => 'Shelf Life',
-            'description' => 'Description',
-            'category_id' => 'Category ID',
+            'weight' => 'Масса',
+            'kilocalories' => 'Килокалории',
+            'shelf_life' => 'Срок годности',
+            'description' => 'Описание',
+            'category_id' => 'Категория',
+            'imageFile' => 'Изображение',
         ];
     }
 
@@ -76,5 +83,17 @@ class Product extends \yii\db\ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $filename = Yii::$app->user->id . '_' . time() . '_' . Yii::$app->security->generateRandomString() . '.' . $this->imageFile->extension;
+            $this->imageFile->saveAs('uploads/' . $filename);
+            $this->photo = $filename;
+            return true;
+        } else {
+            return false;
+        }
     }
 }
