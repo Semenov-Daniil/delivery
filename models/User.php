@@ -81,6 +81,27 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     /**
+     * Gets query for [[Favourites]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFavourites()
+    {
+        return $this->hasMany(Favourite::class, ['user_id' => 'id']);
+    }
+
+
+        /**
+     * Gets query for [[Orders]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrders()
+    {
+        return $this->hasMany(Order::class, ['user_id' => 'id']);
+    }
+
+    /**
      * Finds an identity by the given ID.
      *
      * @param string|int $id the ID to be looked for
@@ -137,5 +158,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getIsAdmin()
     {
         return $this->role_id == Role::getRoleId('admin');
+    }
+
+    public function getFio()
+    {
+        return $this->surname
+                . " "
+                . $this->name
+                . ($this->patronymic ? " " . $this->patronymic : "");
     }
 }

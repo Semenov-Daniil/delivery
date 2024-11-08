@@ -5,16 +5,17 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Product $model */
 
-$this->title = 'Добавить продукт';
-$this->params['breadcrumbs'][] = ['label' => 'Продукты', 'url' => ['index']];
+$this->title = 'Создание товара';
+$this->params['breadcrumbs'][] = ['label' => 'Товары', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <?= $this->render('_form', [
         'model' => $model,
+        'categoryes' => $categoryes,
     ]) ?>
 
 </div>

@@ -4,11 +4,11 @@ namespace app\modules\admin\controllers;
 
 use app\models\Category;
 use app\models\Product;
-use app\models\ProductSearch;
-use app\modules\admin\models\ProductSearch as ModelsProductSearch;
+use app\modules\admin\models\ProductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 use yii\web\UploadedFile;
 
 /**
@@ -41,13 +41,12 @@ class ProductController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ModelsProductSearch();
+        $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'categories' => Category::getCategories(),
         ]);
     }
 
@@ -61,7 +60,7 @@ class ProductController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'categories' => Category::getCategories(),
+            'categoryes' => Category::getCategories(),
         ]);
     }
 
@@ -77,9 +76,14 @@ class ProductController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                !is_null($model->imageFile) && $model->upload();
-                if ($model->save(false)) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                // VarDumper::dump($model->imageFile, 10, true); die;                
+                if (is_null($model->imageFile) || $model->upload()) {
+                    if ($model->save(false)) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        VarDumper::dump($model->errors, 10, true);
+                        die;
+                    }
                 }
             }
         } else {
@@ -88,6 +92,7 @@ class ProductController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'categoryes' => Category::getCategories()
         ]);
     }
 
@@ -101,16 +106,21 @@ class ProductController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ((is_null($model->imageFile) || $model->upload()) && $model->upload() && $model->save(false)) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if (is_null($model->imageFile) || $model->upload()) {
+                if ($model->save(false)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    VarDumper::dump($model->errors, 10, true);
+                    die;
+                }
             }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'categoryes' => Category::getCategories(),
         ]);
     }
 

@@ -1,28 +1,33 @@
 <?php
 
 use app\models\Product;
-use yii\helpers\Html;
+use yii\bootstrap5\Html;
+use yii\helpers\VarDumper;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var app\models\Product $model */
-/** @var app\models\Category $categories */
 
-$this->title = $model->title;
+$this->title = "Товар: " . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Товары', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+
+//  VarDumper::dump($model->attributes, 10, true);
+// VarDumper::dump($categoryes, 10, true); 
+//  die;
 ?>
 <div class="product-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
+    <h3><?= Html::encode($this->title) ?></h3>
     <p>
-        <?= Html::a('Обновить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
+        <?= Html::a('Назад', ['index'], ['class' => 'btn btn-info']) ?>
+        <?= Html::a('Редактирование', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удаление', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Вы точно хотите удалить данный товар?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -41,14 +46,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'description:ntext',
             [
                 'attribute' => 'category_id',
-                'value' => $categories[$model->category_id]
+                'value' => $categoryes[$model->category_id],
             ],
+
+            // [
+            //     'attribute' => 'photo',
+            //     'value' => Html::img("/img/" . ($model->photo ?? $model::NO_PHOTO),['class' => 'w-25', 'alt' => 'product']),
+            //     'format' => 'html'
+            // ],
             [
                 'attribute' => 'photo',
-                'value' => Html::img('/uploads/' . $model->photo, ['class' => 'w-25', 'alt' => $model->title]),
+                'value' => Html::img("/img/" . $model->photo ,['class' => 'w-25', 'alt' => 'product']),
                 'format' => 'html',
-                'visible' => (bool)$model->photo
+                'visible' => (bool)$model->photo,
             ],
+            
+            // 'photo',
         ],
     ]) ?>
 

@@ -2,6 +2,7 @@
 
 namespace app\modules\admin;
 
+use app\models\Role;
 use Yii;
 use yii\filters\AccessControl;
 
@@ -15,27 +16,29 @@ class Module extends \yii\base\Module
      */
     public $controllerNamespace = 'app\modules\admin\controllers';
 
-    /**
-     * {@inheritdoc}
-     */
+    
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
+                // 'only' => ['create', 'update'],
                 'rules' => [
+                    // разрешаем аутентифицированным пользователям
                     [
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => fn() => Yii::$app->user->identity->isAdmin,
                     ],
+                    // всё остальное по умолчанию запрещено
                 ],
-                'denyCallback' => function ($rule, $action) {
-                    Yii::$app->user->isGuest ? Yii::$app->response->redirect(['/site/login']) : Yii::$app->response->redirect(['/']);
-                }
+
+                'denyCallback' => fn() => Yii::$app->response->redirect('/'),
             ],
         ];
     }
+
+
 
     /**
      * {@inheritdoc}

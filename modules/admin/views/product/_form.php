@@ -1,7 +1,6 @@
 <?php
 
-use app\models\Category;
-use yii\helpers\Html;
+use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
@@ -15,6 +14,8 @@ use yii\bootstrap5\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
+    <?php # $form->field($model, 'photo')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'price')->textInput() ?>
 
     <?= $form->field($model, 'count')->textInput() ?>
@@ -27,8 +28,8 @@ use yii\bootstrap5\ActiveForm;
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'category_id')->dropdownList(Category::getCategories(), ['prompt'=>'Выбрать категорию']) ?>
-
+    <?= $form->field($model, 'category_id')->dropdownList($categoryes,['prompt'=>'Выберете категорию']); ?>
+    
     <?= $form->field($model, 'imageFile')->fileInput() ?>
 
     <div class="form-group">

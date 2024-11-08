@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\bootstrap5\ActiveForm;
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Category $model */
@@ -9,8 +9,6 @@ use yii\bootstrap5\ActiveForm;
 ?>
 
 <div class="category-form">
-
-    <?= Html::a('Назад', ['index'], ['class' => 'btn btn-info']) ?>
 
     <?php $form = ActiveForm::begin(); ?>
 
