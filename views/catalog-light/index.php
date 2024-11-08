@@ -7,20 +7,16 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /** @var yii\web\View $this */
-/** @var app\models\ProductSearch $searchModel */
+/** @var app\models\CatalogLightSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
-/** @var app\models\Category $categories */
+/** @var yii\models\Category $categories */
 
-$this->title = 'Товары';
+$this->title = 'Каталог light';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Добавить товар', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -33,11 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'title',
                 'value' => function($model) {
-                    return Html::img('/uploads/' . $model->photo, ['class' => 'w-25 me-3', 'alt' => $model->title]) . $model->title;
+                    return ($model->photo ? Html::img('/uploads/' . $model->photo, ['class' => 'w-25 me-3', 'alt' => $model->title]) : '') . $model->title;
                 },
-                'format' => 'html'
+                'format' => 'html',
             ],
-            'photo',
             'price',
             'count',
             'weight',
@@ -49,12 +44,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model, $key, $index, $column) use($categories) {
                     return $categories[$model->category_id];
                 }    
-            ],
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Product $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
             ],
         ],
     ]); ?>

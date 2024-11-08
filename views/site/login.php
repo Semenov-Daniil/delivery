@@ -7,6 +7,7 @@
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
+use yii\widgets\Pjax;
 
 $this->title = 'Вход';
 $this->params['breadcrumbs'][] = $this->title;
@@ -16,9 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-lg-5">
-
+            <?php Pjax::begin([
+                'id' => 'pjax'
+            ]); ?>
             <?php $form = ActiveForm::begin([
                 'id' => 'login-form',
+                'options' => [
+                    'data' => ['pjax' => true]
+                ],
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n{error}",
                     'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
@@ -38,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
 
             <?php ActiveForm::end(); ?>
+            <?php Pjax::end(); ?>
 
             <div style="color:#999;">
                 You may login with <strong>user/user</strong>.<br>

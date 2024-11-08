@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\modules\admin\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -41,17 +41,12 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find()
-            ->with('category')
-            ;
+        $query = Product::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 4,
-            ],
         ]);
 
         $this->load($params);

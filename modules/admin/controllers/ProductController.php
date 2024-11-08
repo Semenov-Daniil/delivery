@@ -1,10 +1,11 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\admin\controllers;
 
 use app\models\Category;
 use app\models\Product;
 use app\models\ProductSearch;
+use app\modules\admin\models\ProductSearch as ModelsProductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -40,7 +41,7 @@ class ProductController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ProductSearch();
+        $searchModel = new ModelsProductSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -76,7 +77,8 @@ class ProductController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                if ($model->upload() && $model->save(false)) {
+                !is_null($model->imageFile) && $model->upload();
+                if ($model->save(false)) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
@@ -102,7 +104,7 @@ class ProductController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload() && $model->save(false)) {
+            if ((is_null($model->imageFile) || $model->upload()) && $model->upload() && $model->save(false)) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }

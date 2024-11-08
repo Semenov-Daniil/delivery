@@ -78,8 +78,8 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            // return $this->goBack();
         }
 
         $model->password = '';
@@ -137,8 +137,8 @@ class SiteController extends Controller
     {
         $model = new RegisterForm();
         
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->userRegister()) {
-            $this->goBack();
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            // $this->goBack();
         }
 
         return $this->render('register', [

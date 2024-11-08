@@ -7,9 +7,9 @@ use yii\data\ActiveDataProvider;
 use app\models\Product;
 
 /**
- * ProductSearch represents the model behind the search form of `app\models\Product`.
+ * CatalogLightSearch represents the model behind the search form of `app\models\Product`.
  */
-class ProductSearch extends Product
+class CatalogLightSearch extends Product
 {
     /**
      * {@inheritdoc}
@@ -41,17 +41,12 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find()
-            ->with('category')
-            ;
+        $query = Product::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 4,
-            ],
         ]);
 
         $this->load($params);

@@ -40,6 +40,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Каталог', 'url' => ['/catalog']],
+            ['label' => 'Каталог light', 'url' => ['/catalog-light']],
             ['label' => 'Товары', 'url' => ['/product/index']],
             !Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin
                 ? ['label' => 'Панель администратора', 'url' => ['/admin-panel']]
