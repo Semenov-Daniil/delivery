@@ -28,6 +28,11 @@ use Yii;
  */
 class Order extends \yii\db\ActiveRecord
 {
+    public bool $check = false;
+
+    const SCENARIO_OUTPOST = 'outpost';
+    const SCENARIO_COMMENT = 'comment';
+
     /**
      * {@inheritdoc}
      */
@@ -42,7 +47,7 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['product_id', 'date', 'time', 'type_pay_id', 'address', 'outpost_id', 'status_id', 'user_id'], 'required'],
+            [['product_id', 'date', 'time', 'type_pay_id', 'address', 'status_id', 'user_id'], 'required'],
             [['product_id', 'type_pay_id', 'outpost_id', 'status_id', 'user_id'], 'integer'],
             [['date', 'time', 'created_at'], 'safe'],
             [['address', 'comment', 'comment_admin'], 'string', 'max' => 255],
@@ -51,6 +56,22 @@ class Order extends \yii\db\ActiveRecord
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::class, 'targetAttribute' => ['product_id' => 'id']],
             [['type_pay_id'], 'exist', 'skipOnError' => true, 'targetClass' => TypePay::class, 'targetAttribute' => ['type_pay_id' => 'id']],
             [['outpost_id'], 'exist', 'skipOnError' => true, 'targetClass' => Outpost::class, 'targetAttribute' => ['outpost_id' => 'id']],
+            ['check', 'boolean'],
+
+            // ['outpost_id', 'required', 'on' => self::SCENARIO_OUTPOST],
+            // ['comment', 'required', 'on' => self::SCENARIO_COMMENT],
+
+            ['outpost_id', 'required', 'when' => function($model) {
+                return !$model->check;
+            }, 'whenClient' => "function (attribute, value) {
+                return !$('#order-check').prop('checked');
+            }"],
+
+            ['comment', 'required', 'when' => function($model) {
+                return $model->check;
+            }, 'whenClient' => "function (attribute, value) {
+                return $('#order-check').prop('checked');
+            }"],
         ];
     }
 
@@ -72,6 +93,7 @@ class Order extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'comment_admin' => 'Comment Admin',
             'created_at' => 'Created At',
+            'check' => 'Другой вариант полчения'
         ];
     }
 

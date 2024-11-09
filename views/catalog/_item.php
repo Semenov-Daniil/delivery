@@ -37,6 +37,14 @@ use yii\bootstrap5\Html;
                 ? Html::a('Купить', ['/account/order/create', 'product_id' => $model->id], ['class' => 'w-100 btn btn-success'])
                 : ""
             ?>
+            <?= !Yii::$app->user->isGuest && !Yii::$app->user->identity->isAdmin
+                ? Html::a('Купить 2.0', ['/account/order/create2', 'product_id' => $model->id], ['class' => 'w-100 btn btn-success mt-2'])
+                : ""
+            ?>
+            <?= !Yii::$app->user->isGuest && !Yii::$app->user->identity->isAdmin
+                ? Html::a('Купить 3.0', ['/account/order/create3', 'product_id' => $model->id], ['class' => 'w-100 btn btn-success mt-2'])
+                : ""
+            ?>
         </div>
     </div>
 </div>
