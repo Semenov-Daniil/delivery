@@ -154,22 +154,11 @@ class OrderController extends Controller
         $typePay = TypePay::getTypePay();
         $outpost = Outpost::getOutpost();
 
-        if ($this->request->isPost) {
+        if ($this->request->isAjax) {
             if ($model->load($this->request->post())) {
-
-                // $model->scenario = $model->check ? Order::SCENARIO_COMMENT : Order::SCENARIO_OUTPOST;
-
-                // $model->validate();
-
-                // VarDumper::dump($model->errors, 10, true);
-
-                // die;
-
                 if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
-
-                $model->scenario = Order::SCENARIO_DEFAULT;
             }
         } else {
             $model->loadDefaultValues();

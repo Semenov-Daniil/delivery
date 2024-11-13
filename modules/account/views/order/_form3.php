@@ -12,7 +12,11 @@ use yii\widgets\Pjax;
 
 <div class="order-form">
 
-   
+    <?php Pjax::begin([
+        'id' => 'pjax-form',
+        'enablePushState' => false,
+        'timeout' => 10000,
+    ]); ?>
 
         <?php $form = ActiveForm::begin([
             'id' => 'form-order',
@@ -40,24 +44,24 @@ use yii\widgets\Pjax;
 
         <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'outpost_id')->dropdownList($outpost,['prompt'=>'Выберете пункт выдачи']); ?> 
+        <?= $form->field($model, 'outpost_id')->dropdownList($outpost,['prompt'=>'Выберете пункт выдачи', 'disabled' => $model->check]); ?> 
         
         <?= $form->field($model, 'check')->checkbox(); ?> 
 
-        <?= $form->field($model, 'comment')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'comment')->textInput(['maxlength' => true, 'disabled' => !$model->check]) ?>
     
         <div class="form-group">
             <?= Html::submitButton('Создать завказ', ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>
-
+    <?php Pjax::end(); ?>
 </div>
 
 <?php
 
 // $this->registerJsFile('/js/order.js', ['depends' => 'yii\web\JqueryAsset']);
 
-// $this->registerJsFile('/js/order3.js', ['depends' => JqueryAsset::class]);
+$this->registerJsFile('/js/order3.js', ['depends' => JqueryAsset::class]);
 
 ?>

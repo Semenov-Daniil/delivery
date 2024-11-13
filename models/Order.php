@@ -13,7 +13,7 @@ use Yii;
  * @property string $time
  * @property int $type_pay_id
  * @property string $address
- * @property int $outpost_id
+ * @property int|null $outpost_id
  * @property string|null $comment
  * @property int $status_id
  * @property int $user_id
@@ -57,6 +57,7 @@ class Order extends \yii\db\ActiveRecord
             [['type_pay_id'], 'exist', 'skipOnError' => true, 'targetClass' => TypePay::class, 'targetAttribute' => ['type_pay_id' => 'id']],
             [['outpost_id'], 'exist', 'skipOnError' => true, 'targetClass' => Outpost::class, 'targetAttribute' => ['outpost_id' => 'id']],
             ['check', 'boolean'],
+            ['date', 'validateDate'],
 
             // ['outpost_id', 'required', 'on' => self::SCENARIO_OUTPOST],
             // ['comment', 'required', 'on' => self::SCENARIO_COMMENT],
@@ -73,6 +74,13 @@ class Order extends \yii\db\ActiveRecord
                 return $('#order-check').prop('checked');
             }"],
         ];
+    }
+
+    public function validateDate($attribute, $params)
+    {
+        if (strtotime($this->$attribute) < strtotime(date("Y-m-d"))) {
+            $this->addError($attribute, 'Дата должна быть минимум сегодня.');
+        }
     }
 
     /**
@@ -93,7 +101,7 @@ class Order extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'comment_admin' => 'Comment Admin',
             'created_at' => 'Created At',
-            'check' => 'Другой вариант полчения'
+            'check' => 'Другой вариант получения'
         ];
     }
 
