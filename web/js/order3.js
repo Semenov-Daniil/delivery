@@ -1,22 +1,21 @@
 $(() => {
 
-    $('#form-order').on('change', '#order-check', function() {
+    $('#pjax-form-order').on('change', '#order-check', function() {
         $('#order-outpost_id option:first').prop('selected', true);
 
+        const select = $('#order-outpost_id');
+        const comment = $('#order-comment');
+
+        select.removeClass('is-valid is-invalid');
+        comment.removeClass('is-valid is-invalid');
+
         if ($(this).prop('checked')) {
-            $("#order-outpost_id").prop('disabled', true);
-            $("#order-comment").prop('disabled', false);
-
-            $('#order-outpost_id').removeClass('is-invalid');
-            $('#order-comment').removeClass('is-valid');
-
+            select.prop('disabled', true);
+            comment.prop('disabled', false);
         } else {
-            $("#order-comment").prop('value', '');
-            $("#order-comment").prop('disabled', true);
-            $("#order-outpost_id").prop('disabled', false);
-
-            $('#order-comment').removeClass('is-invalid');
-            $('#order-outpost_id').removeClass('is-valid');
+            select.prop('disabled', false);
+            comment.prop('disabled', true);
+            comment.prop('value', '');
         }
     });
     

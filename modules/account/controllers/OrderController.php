@@ -155,10 +155,8 @@ class OrderController extends Controller
         $outpost = Outpost::getOutpost();
 
         if ($this->request->isAjax) {
-            if ($model->load($this->request->post())) {
-                if ($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();

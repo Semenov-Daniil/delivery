@@ -3,6 +3,7 @@
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\web\JqueryAsset;
+use yii\web\YiiAsset;
 use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
@@ -13,7 +14,7 @@ use yii\widgets\Pjax;
 <div class="order-form">
 
     <?php Pjax::begin([
-        'id' => 'pjax-form',
+        'id' => 'pjax-form-order',
         'enablePushState' => false,
         'timeout' => 10000,
     ]); ?>
@@ -60,8 +61,6 @@ use yii\widgets\Pjax;
 
 <?php
 
-// $this->registerJsFile('/js/order.js', ['depends' => 'yii\web\JqueryAsset']);
-
-$this->registerJsFile('/js/order3.js', ['depends' => JqueryAsset::class]);
+$this->registerJsFile('/js/order3.js', ['depends' => YiiAsset::class]);
 
 ?>
